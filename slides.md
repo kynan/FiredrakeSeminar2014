@@ -704,6 +704,28 @@ solve(A, p, b, bcs=bcs)  # bcs consistent, no need to reassemble
 
 ---
 
+## Benchmarks
+
+### ARCHER: Cray XC30 with Aries interconnect (Dragonfly topology)
+* 2x 12-core Intel Xeon E5-2697 @ 2.70GHz (Ivy Bridge)
+* 64GB RAM
+
+### Compilers
+* GNU Compilers 4.8.2
+* Cray MPICH 6.3.1
+* Compiler flags: -O3 -mavx
+
+### Software
+* DOLFIN 30bbd31 (August 22 2014)
+* Firedrake c8ed154 (September 25 2014)
+* PyOP2 f67fd39 (September 24 2014)
+
+### Problem setup
+* DOLFIN + Firedrake: RCM mesh reordering enabled
+* DOLFIN: quadrature with optimisations enabled
+* Firedrake: quadrature with COFFEE loop-invariant code motion, alignment and padding
+
+---
 ## Summary and additional features
 
 ### Summary
