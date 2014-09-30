@@ -401,6 +401,33 @@ void wrap_midpoint(int boffset, int nblocks,
 
 ---
 
+## Why OP2 is not enough
+
+* Static analysis at compile time: "Synthesis is easy, analysis is hard!"
+* No object introspection, attributes needs to be explicit in code
+* User code compiled for a specific backend, linked against runtime library
+
+`adt_calc` kernel in the OP2 Airfoil example application:
+```c
+op_par_loop(adt_calc,"adt_calc",cells,
+            op_arg_dat(p_x,   0,pcell, 2,"double",OP_READ ),
+            op_arg_dat(p_x,   1,pcell, 2,"double",OP_READ ),
+            op_arg_dat(p_x,   2,pcell, 2,"double",OP_READ ),
+            op_arg_dat(p_x,   3,pcell, 2,"double",OP_READ ),
+            op_arg_dat(p_q,  -1,OP_ID, 4,"double",OP_READ ),
+            op_arg_dat(p_adt,-1,OP_ID, 1,"double",OP_WRITE));
+```
+
+`adt_calc` kernel in the PyOP2 Airfoil example application:
+```python
+op2.par_loop(adt_calc, cells,
+             p_x(op2.READ, pcell),
+             p_q(op2.READ),
+             p_adt(op2.WRITE))
+```
+
+---
+
 class: center, middle
 
 # Finite-element computations with Firedrake
