@@ -776,6 +776,12 @@ Formulation with 1st order time derivatives:
 
 ---
 
+### Cahn-Hilliard Equation Strong Scaling on UK National Supercomputer ARCHER
+
+.scale[![Cahn-Hilliard strong scaling](plots/CahnHilliardStrong.svg)]
+
+---
+
 ## Summary and additional features
 
 ### Summary
