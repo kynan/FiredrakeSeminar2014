@@ -729,7 +729,7 @@ solve(A, p, b, bcs=bcs)  # bcs consistent, no need to reassemble
 
 ## Explicit Wave Equation
 
-.left70[
+.left60[
 ```python
 from firedrake import *
 mesh = Mesh("wave_tank.msh")
@@ -742,24 +742,27 @@ u = TrialFunction(V)
 v = TestFunction(V)
 
 p_in = Constant(0.0)
-# Boundary condition for y=0
-bc = DirichletBC(V, p_in, 1)
+bc = DirichletBC(V, p_in, 1)  # for y=0
 
 T = 10.
 dt = 0.001
 t = 0
 
+b = assemble(rhs)
+dphi = 0.5 * dtc * p
+dp = dtc * Ml * b
+
 while t <= T:
     p_in.assign(sin(2*pi*5*t))
-    phi -= dt / 2 * p
-    p += (assemble(dt * inner(grad(v), grad(phi))*dx) /
-        assemble(v*dx))
+    phi -= dphi
+    assemble(rhs, tensor=b)
+    p += dp
     bc.apply(p)
-    phi -= dt / 2 * p
+    phi -= dphi
     t += dt
 ```
 ]
-.right30[
+.right40[
 2nd order PDE:
 `$$\frac{\partial^2\phi}{\partial t^2} - \nabla^2 \phi = 0$$`
 
