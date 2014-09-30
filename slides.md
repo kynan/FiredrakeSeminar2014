@@ -726,6 +726,56 @@ solve(A, p, b, bcs=bcs)  # bcs consistent, no need to reassemble
 * Firedrake: quadrature with COFFEE loop-invariant code motion, alignment and padding
 
 ---
+
+## Explicit Wave Equation
+
+.left70[
+```python
+from firedrake import *
+mesh = Mesh("wave_tank.msh")
+
+V = FunctionSpace(mesh, 'Lagrange', 1)
+p = Function(V, name="p")
+phi = Function(V, name="phi")
+
+u = TrialFunction(V)
+v = TestFunction(V)
+
+p_in = Constant(0.0)
+# Boundary condition for y=0
+bc = DirichletBC(V, p_in, 1)
+
+T = 10.
+dt = 0.001
+t = 0
+
+while t <= T:
+    p_in.assign(sin(2*pi*5*t))
+    phi -= dt / 2 * p
+    p += (assemble(dt * inner(grad(v), grad(phi))*dx) /
+        assemble(v*dx))
+    bc.apply(p)
+    phi -= dt / 2 * p
+    t += dt
+```
+]
+.right30[
+2nd order PDE:
+`$$\frac{\partial^2\phi}{\partial t^2} - \nabla^2 \phi = 0$$`
+
+Formulation with 1st order time derivatives:
+`$$\frac{\partial\phi}{\partial t} = - p$$`
+`$$\frac{\partial p}{\partial t} + \nabla^2 \phi = 0$$`
+]
+
+---
+
+### Explicit Wave Equation Strong Scaling on UK National Supercomputer ARCHER
+
+.scale[![Explicit wave strong scaling](plots/WaveStrong.svg)]
+
+---
+
 ## Summary and additional features
 
 ### Summary
